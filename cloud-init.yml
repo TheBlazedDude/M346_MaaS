@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - default
+  - name: bene
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDe7M4WHpm9M1mB7gszm/Uyzn1dMkN34Rnmgtf7r6SF2P2GtgooYakbyW+5AATq8DmLSMHCDZQ1w7b1R8YfKeCtMfXOKx+zEyuLtplvSfH9VEVSZf5xi+qI8cFPAVGGaQOeopFM1g9mdSP0xj7rc2144PF87erk5LI3EJKfnvcCF+ZGkE5KeryX/KY57wOcpolXe2gycZuRdlnE5g9yWuUvlPouLWRV3wM+jmg2zYSaB5cTLobipxmu2cOS/h8vjK//cd2vafAOndfXq5SFdJFbkjwbTiM/qBT6dCUlALSTScUwoLWGQeBUQbbSEcx5qMqnOS+cZTfUSNblLvMzjUoN bene@BlazedBook

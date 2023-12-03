@@ -1,0 +1,16 @@
+[Unit]
+Description=Springboot Service
+After=network.target
+
+StartLimitIntervalSec=600
+StartLimitBurst=30
+
+[Service]
+User=sven
+Restart=on-failure
+RestartSec=10s
+
+ExecStart=/usr/bin/java -DDB_URL="jdbc:mariadb://192.168.66.42:3306/jokedb" -DDB_USERNAME="jokedbuser" -DDB_PASSWORD="123456" -jar /project/target/architecture-refcard-03-0.0.1-SNAPSHOT.jar
+
+[Install]
+WantedBy=multi-user.target

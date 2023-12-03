@@ -1,0 +1,77 @@
+---
+- name: Setup database
+  hosts: db
+  become: true # ansible should use sudo
+ 
+  tasks:
+    - name: Clone the Git repository
+      git:
+        repo: https://gitlab.com/bbwrl/m346-ref-card-03.git
+        dest: /project
+   
+    - name: Install Docker and Python
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - docker.io
+        - docker-compose
+        - python3
+        - python3-pip
+
+    - name: Ensure Docker service is enabled and started
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+      when: not ansible_check_mode
+ 
+    - name: Start the database with Docker Compose
+      community.docker.docker_compose:
+        project_src: /project
+      when: not ansible_check_mode
+
+#--------------------------------------------------------------------------------------------------------
+
+- name: Setup webserver
+  hosts: web
+  become: true # ansible should use sudo
+ 
+  tasks:
+    - name: Install maven
+      ansible.builtin.apt:
+        name: maven
+        state: present
+        update_cache: true
+ 
+    - name: Clone the Git repository
+      git:
+        repo: https://gitlab.com/bbwrl/m346-ref-card-03.git
+        dest: /project
+ 
+    - name: Build the project with Maven
+      ansible.builtin.command:
+        cmd: mvn package
+      args:
+        chdir: /project
+      when: not ansible_check_mode
+ 
+    - name: Copy springboot-run.service file to server
+      copy:
+        src: springboot-run.service
+        dest: /etc/systemd/system
+        owner: root
+        group: root
+
+    - name: Start Webserver and enable springboot-run.service
+      ansible.builtin.service:
+        name: springboot-run
+        state: started
+        enabled: yes
+      when: not ansible_check_mode
+
+    - name: Wait for port 8080 to become open on the host
+      ansible.builtin.wait_for:
+        port: 8080
+        delay: 5
+        timeout: 300
