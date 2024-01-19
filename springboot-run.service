@@ -6,7 +6,7 @@ StartLimitIntervalSec=600
 StartLimitBurst=30
 
 [Service]
-User=ben
+User=bene
 Restart=on-failure
 RestartSec=10s
 
